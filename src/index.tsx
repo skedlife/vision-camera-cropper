@@ -52,6 +52,31 @@ export function crop(frame: Frame,config?:CropConfig): CropResult {
   }
 }
 
+export function cropImage(base64: string, config?:CropConfig): CropResult {
+  if (plugin == null) throw new Error('Failed to load Frame Processor Plugin "crop"!')
+  let record:Record<string,any> = {};
+  record["base64Image"] = base64;
+  if (config) {
+    if (config.includeImageBase64 != undefined && config.includeImageBase64 != null) {
+      record["includeImageBase64"] = config.includeImageBase64;
+    }
+    if (config.saveAsFile != undefined && config.saveAsFile != null) {
+      record["saveAsFile"] = config.saveAsFile;
+    }
+    if (config.cropRegion) {
+      let cropRegionRecord:Record<string,any> = {};
+      cropRegionRecord["left"] = config.cropRegion.left;
+      cropRegionRecord["top"] = config.cropRegion.top;
+      cropRegionRecord["width"] = config.cropRegion.width;
+      cropRegionRecord["height"] = config.cropRegion.height;
+      record["cropRegion"] = cropRegionRecord;
+    }
+    return VisionCameraCropper.cropImage(record) as any;
+  }else{
+    return VisionCameraCropper.cropImage(record) as any;
+  }
+};
+
 //the value is in percentage
 export interface CropRegion{
   left: number;
