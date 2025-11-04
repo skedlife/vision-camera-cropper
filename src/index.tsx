@@ -18,6 +18,8 @@ const VisionCameraCropper = NativeModules.VisionCameraCropper
       }
     );
 
+console.log("===> THE DATA: ", VisionCameraCropper.cropImage);
+
 const plugin = VisionCameraProxy.initFrameProcessorPlugin('crop',{});
 
 export function rotateImage(base64:string,degree:number): Promise<string> {
