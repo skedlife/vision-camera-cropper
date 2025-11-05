@@ -25,7 +25,7 @@ class VisionCameraCropper: NSObject {
                                  y: rotatedSize.height / 2.0)
             context.translateBy(x: origin.x, y: origin.y)
             context.rotate(by: radians)
-            image.draw(in: CGRect(x: -origin.y, y: -origin.x,
+            image.draw(in: CGRect(x: -origin.x, y: -origin.y,
                                   width: image.size.width, height: image.size.height))
             let rotatedImage = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
@@ -71,7 +71,6 @@ class VisionCameraCropper: NSObject {
         }
         let cgimage = image?.cgImage!
         var croppedImage = originalImage
-          
           let cropRegion = arguments["cropRegion"] as? [String: Double]
           if cropRegion != nil {
             let imgWidth = Double((image?.cgImage!.width)!)
@@ -81,8 +80,6 @@ class VisionCameraCropper: NSObject {
             let width:Double = Double(cropRegion?["width"] ?? 100) / 100.0 * imgWidth
             let height:Double = Double(cropRegion?["height"] ?? 100) / 100.0 * imgHeight
 
-            // The cropRect is the rect of the image to keep,
-            // in this case centered
             let cropRect = CGRect(
                 x: left,
                 y: top,
@@ -94,27 +91,6 @@ class VisionCameraCropper: NSObject {
                 to: cropRect
             )!
             croppedImage = UIImage(cgImage: cropped)
-//        if let cropRegion = arguments["cropRegion"] as? [String: Any],
-//           let left = cropRegion["left"] as? Double,
-//           let top = cropRegion["top"] as? Double,
-//           let width = cropRegion["width"] as? Double,
-//           let height = cropRegion["height"] as? Double {
-//
-//          let imgWidth = originalImage.size.width
-//          let imgHeight = originalImage.size.height
-//
-//          let cropLeft = CGFloat(left / 100.0 * Double(imgWidth))
-//          let cropTop = CGFloat(top / 100.0 * Double(imgHeight))
-//          let cropWidth = CGFloat(width / 100.0 * Double(imgWidth))
-//          let cropHeight = CGFloat(height / 100.0 * Double(imgHeight))
-//
-//          let cropRect: CGRect = CGRect(x: cropLeft, y: cropTop, width: cropWidth, height: cropHeight)
-//          
-//            if let imageRef: CGImage = cgimage?.cropping(to: cropRect) {
-//                croppedImage = UIImage(cgImage: imageRef, scale: image!.scale, orientation: image!.imageOrientation)
-//          } else {
-//            throw NSError(domain: "VisionCameraCropper", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to crop image."])
-//          }
         }
 
         if let includeImageBase64 = arguments["includeImageBase64"] as? Bool, includeImageBase64 {
