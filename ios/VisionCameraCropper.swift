@@ -16,20 +16,19 @@ class VisionCameraCropper: NSObject {
 
     public static func rotate(image: UIImage, degree: CGFloat) -> UIImage {
         let radians = degree / (180.0 / .pi)
-        let rotatedSize = CGRect(origin: .zero, size: image.size)
-            .applying(CGAffineTransform(rotationAngle: CGFloat(radians)))
-            .integral.size
-        UIGraphicsBeginImageContext(rotatedSize)
+        let width = image.size.width
+        let height = image.size.height
+        let newWidth = abs(width * cos(radians)) + abs(height * sin(radians))
+        let newHeight = abs(width * sin(radians)) + abs(height * cos(radians))
+        let rotatedSize = CGSize(width: newWidth, height: newHeight)
+
+        UIGraphicsBeginImageContextWithOptions(rotatedSize, false, image.scale)
         if let context = UIGraphicsGetCurrentContext() {
-            let origin = CGPoint(x: rotatedSize.width / 2.0,
-                                 y: rotatedSize.height / 2.0)
-            context.translateBy(x: origin.x, y: origin.y)
+            context.translateBy(x: rotatedSize.width / 2, y: rotatedSize.height / 2)
             context.rotate(by: radians)
-            image.draw(in: CGRect(x: -origin.x, y: -origin.y,
-                                  width: image.size.width, height: image.size.height))
+            image.draw(in: CGRect(x: -width / 2, y: -height / 2, width: width, height: height))
             let rotatedImage = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
-
             return rotatedImage ?? image
         }
         return image
